@@ -9,12 +9,12 @@
 	</settings>
 	
 	<typeAliases>
-    	<typeAlias alias="user" type="com.iot1sql.lecture.user.dao.dto.UserInfo"/>
-    	<typeAlias alias="goods" type="com.iot1sql.lecture.goods.dto.GoodsInfo"/>
+    	<typeAlias alias="user" type="com.iot.kedric.user.dao.dto.UserInfo"/>
+    	<typeAlias alias="goods" type="com.iot.kedric.goods.dto.GoodsInfo"/>
 	</typeAliases>
 	<mappers>
-		<mapper resource="com/iot1sql/lecture/user/dao/sql/user_sql.xml" />
-		<mapper resource="com/iot1sql/lecture/goods/sql/goods_sql.xml" />
+		<mapper resource="com/iot/kedric/user/dao/sql/user_sql.xml" />
+		<mapper resource="com/iot/kedric/goods/sql/goods_sql.xml" />
 	</mappers>
 </configuration>
 

@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.iot1sql.lecture.user.dao.dto.UserInfo;
-import com.iot1sql.lecture.user.service.UserService;
+import com.iot.kedric.user.dao.dto.UserInfo;
+import com.iot.kedric.user.service.UserService;
 
 @Controller
 public class UserController {

@@ -5,8 +5,8 @@ import java.util.List;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
 
-import com.iot1sql.lecture.user.dao.UserDAO;
-import com.iot1sql.lecture.user.dao.dto.UserInfo;
+import com.iot.kedric.user.dao.UserDAO;
+import com.iot.kedric.user.dao.dto.UserInfo;
 
 @Repository
 public class UserDAOImpl extends SqlSessionDaoSupport implements UserDAO{

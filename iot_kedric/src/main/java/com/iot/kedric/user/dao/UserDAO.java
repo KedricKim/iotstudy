@@ -2,7 +2,7 @@ package com.iot.kedric.user.dao;
 
 import java.util.List;
 
-import com.iot1sql.lecture.user.dao.dto.UserInfo;
+import com.iot.kedric.user.dao.dto.UserInfo;
 
 public interface UserDAO {
 
