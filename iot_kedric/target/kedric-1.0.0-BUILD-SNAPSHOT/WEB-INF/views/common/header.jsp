@@ -20,6 +20,7 @@
 <script src="<c:url value="/resources/ui/btsp3.7.7/js/bootstrap-table.js?version=${pVar}"/>"></script>
 <script src="<c:url value="/resources/ui/btsp3.7.7/js/bootstrap-table.js?version=${pVar}"/>"></script>
 
+<script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
 <script src="<c:url value='/resources/js/kendo.all.min.js' />"></script>
 <script src="<c:url value='/resources/js/kendo.timezones.min.js' />"></script>
 <script src="<c:url value='/resources/shared/js/console.js'/>"></script>
@@ -36,10 +37,40 @@
 <link href="<c:url value='/resources/css/dataviz/kendo.dataviz.default.min.css'/>" rel="stylesheet" />
 <link href="<c:url value='/resources/shared/styles/examples-offline.css'/>" rel="stylesheet"/>
 <script>
+
 $(document).ready(function(){
 	var nowUrl = "${nowUrl}";
 	var obj = $("a[href='" + nowUrl + "']").parent().attr("class","active");
 })
+var KendoItem = function(obj, grid,url, keyStr){
+	var selectValue = obj.dataItem(obj.select())[keyStr];
+	this.key = keyStr;
+	this.param = {};
+	this.param[keyStr]=selectValue;
+	var gridObj = grid.data("kendoGrid");
+	gridObj.dataSource.transport.param = this.param;
+	var reload = function(options){
+        $.ajax({
+        	type : "post",
+			url : url,
+			dataType : "json",
+			data : JSON.stringify(this.param),
+		    beforeSend: function(xhr) {
+		        xhr.setRequestHeader("Content-Type", "application/json");
+		    },
+		    success : function(result){
+		    	options.success(result);
+			},
+			error : function(xhr){
+				alert(xhr.responseText);
+			}
+        });
+	}
+	this.send = function(){
+	    gridObj.dataSource.transport.read = reload;
+		gridObj.dataSource.read();
+	}
+}
 var JSException = function(msg){
 	alert(msg);
 	console.log(msg);
@@ -56,6 +87,7 @@ var AjaxUtil = function (url, params, type, dataType){
 	this.url = "${rootPath}/" + url;
 	
 	var generateJSON = function(params){
+		if(!params) return "";
 		var paramArr = params.split(",");
 		var data = {};
 		for(var i=0,max=paramArr.length;i<max;i++){
@@ -107,8 +139,10 @@ var AjaxUtil = function (url, params, type, dataType){
 	}
 }
 
+
 </script>
 <body>
+<br><br></p><br>
 <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
