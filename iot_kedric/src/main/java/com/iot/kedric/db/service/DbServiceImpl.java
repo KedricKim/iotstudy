@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.iot.kedric.db.dao.DbDao;
+import com.iot.kedric.db.dto.Column;
 import com.iot.kedric.db.dto.DataBase;
 import com.iot.kedric.db.dto.DbInfo;
 import com.iot.kedric.db.dto.Table;
@@ -33,6 +34,12 @@ public class DbServiceImpl implements DbService{
 	
 	public List<DataBase> getDataBaseList() throws Exception{
 		return dDao.selectDatabaseList();
+	}
+
+	@Override
+	public List<Column> getTableInfo(Table table) throws Exception {
+		// TODO Auto-generated method stub
+		return dDao.selectTableInfo(table);
 	}
 
 

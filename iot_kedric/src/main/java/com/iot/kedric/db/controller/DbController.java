@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.iot.kedric.db.dto.DataBase;
 import com.iot.kedric.db.dto.DbInfo;
+import com.iot.kedric.db.dto.Table;
 import com.iot.kedric.db.service.DbService;
 
 @Controller
@@ -43,6 +44,17 @@ public class DbController {
 			}else{
 				map.put("error", "데이터베이스에 접속하지 못했습니다.");
 			}
+		}catch(Exception e){
+			map.put("error", e.getMessage());
+		}
+		return map;
+	}
+	
+	@RequestMapping(value="/db/table/info",method=RequestMethod.POST)
+	public @ResponseBody ModelMap getTableInfo(@RequestBody Table table, ModelMap map){
+		try{
+			map.put("tableList", ds.getTableInfo(table));
+			map.put("key", "tableList");
 		}catch(Exception e){
 			map.put("error", e.getMessage());
 		}

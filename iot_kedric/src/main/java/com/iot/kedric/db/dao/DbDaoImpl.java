@@ -9,10 +9,11 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.iot.kedric.common.DataSourceFactory;
+import com.iot.kedric.db.dto.Column;
 import com.iot.kedric.db.dto.DataBase;
 import com.iot.kedric.db.dto.DbInfo;
 import com.iot.kedric.db.dto.Table;
-import com.iot.kedric.common.DataSourceFactory;
 
 
 @Repository
@@ -51,6 +52,12 @@ public class DbDaoImpl extends SqlSessionDaoSupport implements DbDao{
 			databaseList.add(db);
 		}
 		return databaseList;
+	}
+
+	@Override
+	public List<Column> selectTableInfo(Table table) throws Exception {
+		// TODO Auto-generated method stub
+		return dsf.getSqlSession().selectList("db.TABLE_INFO_SELECT",table);
 	}
 	
 

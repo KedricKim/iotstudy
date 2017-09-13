@@ -1,14 +1,43 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@taglib prefix="kendo" uri="http://www.kendoui.com/jsp/tags"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
-<c:url var="dbRUrl" value="/db/list/tree" />
+<c:set var="dbTreeJsp" value="/WEB-INF/views/db/db_treeview.jsp" />
+<c:set var="tableInfoJsp" value="/WEB-INF/views/db/table_info.jsp" />
+<c:set var="tabJsp" value="/WEB-INF/views/db/tab.jsp" />
+<c:url var="tableInfoUrl" value="/db/table/info" />
+
 <title>IOT SQL</title>
 </head>
 <script>
 var treeview;
+
 function onBound(){
 	treeview = $('#treeview').data('kendoTreeView');
+	$( "#query" ).keydown(function(e) {
+		var keyCode = e.keyCode || e.which;
+		if(e.ctrlKey && keyCode==120 && e.shiftKey){
+			var sql = this.value;
+			var cursor = this.selectionStart;
+			var startSql = sql.substr(0,cursor);
+			var startSap = startSql.lastIndexOf(";")
+			startSql = startSql.substr(startSap+1);
+			var endSql = sql.substr(cursor);
+			var endSap = endSql.indexOf(";");
+			if(endSap==-1) {
+				endSap=sql.length;
+			}
+			endSql = endSql.substr(0,endSap);
+			sql = startSql + endSql;
+			alert(sql);
+			alert(this.selectionStart);
+		}else if(e.ctrlKey && keyCode==120){
+			var t = this.value.substr(this.selectionStart, this.selectionEnd - this.selectionStart);
+			alert(t);
+		}else if(keyCode==120){
+			
+		}
+		
+	});
 }
 function toolbarEvent(e){
 	if($("#btnConnect").text()=="접속해제"){
@@ -40,6 +69,9 @@ function treeSelect(){
 		au.param = JSON.stringify(param);
 		au.setCallbackSuccess(callbackForTreeItem2);
 		au.send();
+	}else if(data.tableName){
+		var ki = new KendoItem(treeview, $("#tableInfoGrid"), "${tableInfoUrl}","tableName");
+		ki.send();
 	}
 }
 function callbackForTreeItem2(result){
@@ -53,7 +85,6 @@ function callbackForTreeItem2(result){
 			tableName: table.tableName
         }, treeview.select());
 	}
-	$("#btnConnect").text("접속해제");
 }
 function callbackForTreeItem(result){
 	if(result.error){
@@ -71,6 +102,7 @@ function callbackForTreeItem(result){
 
 </script>
 <body>
+<c:import url="${menuUrl}"/> 
 <kendo:splitter name="vertical" orientation="vertical">
     <kendo:splitter-panes>
         <kendo:splitter-pane id="top-pane" collapsible="false">
@@ -80,29 +112,7 @@ function callbackForTreeItem(result){
 				        <kendo:splitter-pane id="left-pane" collapsible="true" size="220px">
 				            <kendo:splitter-pane-content >
 				                <div class="pane-content">
-					                <kendo:toolBar name="toolbar">
-										<kendo:toolBar-items>
-											<kendo:toolBar-item type="button" text="접속" id="btnConnect" click="toolbarEvent"></kendo:toolBar-item>
-										</kendo:toolBar-items>
-									</kendo:toolBar>
-									 <kendo:treeView name="treeview" dataTextField="<%= new String[]{\"dbTitle\", \"database\",\"tableName\"} %>" change="treeSelect" 
-									 dataBound="onBound">
-									     <kendo:dataSource>
-									         <kendo:dataSource-transport>
-									             <kendo:dataSource-transport-read url="${dbRUrl}" type="POST"  contentType="application/json"/>    
-									             <kendo:dataSource-transport-parameterMap>
-									             	<script>
-										              	function parameterMap(options,type) {
-										              		return JSON.stringify(options);
-										              	}
-									             	</script>
-									             </kendo:dataSource-transport-parameterMap>         
-									         </kendo:dataSource-transport>
-									         <kendo:dataSource-schema>
-									             <kendo:dataSource-schema-hierarchical-model id="dbTitle" hasChildren="hasDatabases"/>
-									         </kendo:dataSource-schema>
-									     </kendo:dataSource>
-									 </kendo:treeView>
+					                <c:import url="${dbTreeJsp}"/>
                                 </div>
 				            </kendo:splitter-pane-content>
 				        </kendo:splitter-pane>
@@ -112,15 +122,14 @@ function callbackForTreeItem(result){
 				   					<kendo:splitter-panes>
 		       							<kendo:splitter-pane id="top-pane" collapsible="false" >
 							                <div class="pane-content">
-						                		<h3>Inner splitter / middle top pane</h3>
+						                		<c:import url="${tabJsp}"/>
 			                                </div>
 		       							</kendo:splitter-pane>
 		       							<kendo:splitter-pane id="middle-pane" collapsible="true" >
 							                <div class="pane-content">
-						                		<h3>Inner splitter / middle-middle pane</h3>
+						                		<c:import url="${tableInfoJsp}"/>
 			                                </div>
 		       							</kendo:splitter-pane>
-		       							
 	       							</kendo:splitter-panes>
        							</kendo:splitter>
 				            </kendo:splitter-pane-content>
@@ -144,7 +153,7 @@ function callbackForTreeItem(result){
         </kendo:splitter-pane>
     </kendo:splitter-panes>
 </kendo:splitter>
-
+</body>
 <style>
     #vertical {
         height: 580px;
@@ -196,5 +205,4 @@ function callbackForTreeItem(result){
         width: 80%;
     }
 </style>
-</body>
 </html>

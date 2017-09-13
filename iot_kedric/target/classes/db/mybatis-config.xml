@@ -13,7 +13,7 @@
     	<typeAlias alias="goods" type="com.iot.kedric.goods.dto.GoodsInfo"/>
     	<typeAlias alias="vendor1" type="com.iot.kedric.vendor.dto.VendorInfo"/>
     	<typeAlias alias="db" type="com.iot.kedric.db.dto.DbInfo"/>
-    	<typeAlias alias="database" type="com.iot.kedric.db.dto.DataBase"/>
+    	<typeAlias alias="dataBase" type="com.iot.kedric.db.dto.DataBase"/>
     	<typeAlias alias="table" type="com.iot.kedric.db.dto.Table"/>
     	<typeAlias alias="column" type="com.iot.kedric.db.dto.Column"/>
 	</typeAliases>
