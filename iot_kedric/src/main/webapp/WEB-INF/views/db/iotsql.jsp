@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ page session="false" %> 
 <c:set var="dbTreeJsp" value="/WEB-INF/views/db/db_treeview.jsp" />
 <c:set var="tableInfoJsp" value="/WEB-INF/views/db/table_info.jsp" />
 <c:set var="tabJsp" value="/WEB-INF/views/db/tab.jsp" />
@@ -11,33 +12,126 @@
 <script>
 var treeview;
 
+
 function onBound(){
-	treeview = $('#treeview').data('kendoTreeView');
+	if(!treeview){
+		treeview = $('#treeview').data('kendoTreeView');	
+	}
+	
+}
+function test(a){
+	alert(a);
+}
+$(document).ready(function(){
+	
+	var cnt = 0;
 	$( "#query" ).keydown(function(e) {
 		var keyCode = e.keyCode || e.which;
-		if(e.ctrlKey && keyCode==120 && e.shiftKey){
-			var sql = this.value;
-			var cursor = this.selectionStart;
-			var startSql = sql.substr(0,cursor);
-			var startSap = startSql.lastIndexOf(";")
-			startSql = startSql.substr(startSap+1);
-			var endSql = sql.substr(cursor);
-			var endSap = endSql.indexOf(";");
-			if(endSap==-1) {
-				endSap=sql.length;
+		if(keyCode==120){
+			cnt++;
+			console.log(cnt);
+			var sql;
+			var sqls;
+			if(e.ctrlKey && keyCode==120 && e.shiftKey){
+				sql = this.value;
+				var cursor = this.selectionStart;
+				var startSql = sql.substr(0,cursor);
+				var startSap = startSql.lastIndexOf(";")
+				startSql = startSql.substr(startSap+1);
+				var endSql = sql.substr(cursor);
+				var endSap = endSql.indexOf(";");
+				if(endSap==-1) {
+					endSap=sql.length;
+				}
+				endSql = endSql.substr(0,endSap);
+				sql = startSql + endSql;
+			}else if(e.ctrlKey && keyCode==120){
+				sql = this.value.substr(this.selectionStart, this.selectionEnd - this.selectionStart);
+			}else if(keyCode==120){
+				sql = this.value;
 			}
-			endSql = endSql.substr(0,endSap);
-			sql = startSql + endSql;
-			alert(sql);
-			alert(this.selectionStart);
-		}else if(e.ctrlKey && keyCode==120){
-			var t = this.value.substr(this.selectionStart, this.selectionEnd - this.selectionStart);
-			alert(t);
-		}else if(keyCode==120){
+			if(sql){
+				sql = sql.trim();
+				sqls = sql.split(";");
+				if(sqls.length==1){
+					var au = new AjaxUtil("db/run/sql");
+					var param = {};
+					param["sql"] = sql;
+					au.param = JSON.stringify(param);
+					au.setCallbackSuccess(callbackSql);
+					au.send();
+					return;
+				}else if(sqls){
+					
+					return;
+				}
+			}
 			
 		}
-		
 	});
+})
+function callbackSql(result){
+	var key = result.key;
+	var obj = result[key];
+	var gridData = obj.list;
+	
+	try{
+		$('#resultGrid').kendoGrid('destroy').empty();
+	}catch(e){
+		
+	}
+	var gridParam = {
+	  		dataSource: {
+	    	      data: gridData,
+	    	      pageSize: 5
+	    	    },
+	    	    editable: false,
+	    	    sortable: true,
+	    	    pageable:true	    
+	  	}
+  	var grid = $("#resultGrid").kendoGrid(gridParam);
+}
+function treeSelect(){
+	window.selectedNode = treeview.select();
+	var data = treeview.dataItem(window.selectedNode);
+	if(data.database && !data.hasChildren){
+		var au = new AjaxUtil("db/table/list");
+		var param = {};
+		param["database"] = data.database;
+		au.param = JSON.stringify(param);
+		au.setCallbackSuccess(callbackForTreeItem2);
+		au.send();
+	}else if(data.tableName){
+		var ki = new KendoItem(treeview, $("#tableInfoGrid"), "${tableInfoUrl}","tableName");
+		ki.send();
+	}
+}
+
+function callbackForTreeItem2(result){
+	if(result.error){
+		alert(result.error);
+		return;
+	}
+	for(var i=0, max=result.tableList.length;i<max;i++){
+		var table = result.tableList[i];
+		treeview.append({
+			tableName: table.tableName
+        }, treeview.select());
+	}
+}
+
+function callbackForTreeItem(result){
+	if(result.error){
+		alert(result.error);
+		return;
+	}
+	for(var i=0, max=result.databaseList.length;i<max;i++){
+		var database = result.databaseList[i];
+		treeview.append({
+			database: database.database
+        }, treeview.select());
+	}
+	$("#btnConnect").text("접속해제");
 }
 function toolbarEvent(e){
 	if($("#btnConnect").text()=="접속해제"){
@@ -59,50 +153,10 @@ function toolbarEvent(e){
 		alert("접속하실 데이터베이스를 선택해주세요");
 	}
 }
-function treeSelect(){
-	window.selectedNode = treeview.select();
-	var data = treeview.dataItem(window.selectedNode);
-	if(data.database&& !data.hasChildren){
-		var au = new AjaxUtil("db/table/list");
-		var param = {};
-		param["database"] = data.database;
-		au.param = JSON.stringify(param);
-		au.setCallbackSuccess(callbackForTreeItem2);
-		au.send();
-	}else if(data.tableName){
-		var ki = new KendoItem(treeview, $("#tableInfoGrid"), "${tableInfoUrl}","tableName");
-		ki.send();
-	}
-}
-function callbackForTreeItem2(result){
-	if(result.error){
-		alert(result.error);
-		return;
-	}
-	for(var i=0, max=result.tableList.length;i<max;i++){
-		var table = result.tableList[i];
-		treeview.append({
-			tableName: table.tableName
-        }, treeview.select());
-	}
-}
-function callbackForTreeItem(result){
-	if(result.error){
-		alert(result.error);
-		return;
-	}
-	for(var i=0, max=result.databaseList.length;i<max;i++){
-		var database = result.databaseList[i];
-		treeview.append({
-			database: database.database
-        }, treeview.select());
-	}
-	$("#btnConnect").text("접속해제");
-}
 
 </script>
 <body>
-<c:import url="${menuUrl}"/> 
+<%@ include file="/WEB-INF/views/common/top_menu.jsp" %>
 <kendo:splitter name="vertical" orientation="vertical">
     <kendo:splitter-panes>
         <kendo:splitter-pane id="top-pane" collapsible="false">
@@ -127,7 +181,7 @@ function callbackForTreeItem(result){
 		       							</kendo:splitter-pane>
 		       							<kendo:splitter-pane id="middle-pane" collapsible="true" >
 							                <div class="pane-content">
-						                		<c:import url="${tableInfoJsp}"/>
+						                		<div id="resultGrid" style="width: 100%;"></div>
 			                                </div>
 		       							</kendo:splitter-pane>
 	       							</kendo:splitter-panes>
@@ -204,5 +258,12 @@ function callbackForTreeItem(result){
     #content .demo-section input {
         width: 80%;
     }
+    .k-button >.k-toolbar-first-visible >.k-toolbar-last-visible{
+    	color:red;
+    }
+    a[class='k-link'], tr{ 
+		text-align: center;
+		color:blue;
+	}
 </style>
 </html>

@@ -1,6 +1,7 @@
 package com.iot.kedric.db.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.iot.kedric.db.dto.Column;
 import com.iot.kedric.db.dto.DataBase;
@@ -19,5 +20,7 @@ public interface DbService {
 	public List<DataBase> getDataBaseList() throws Exception;
 
 	public List<Column> getTableInfo(Table table)throws Exception;
+	
+	public Map<String,Object> runSql(Map<String, String> pm) throws Exception;
 
 }

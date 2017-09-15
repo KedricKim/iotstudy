@@ -1,6 +1,7 @@
 package com.iot.kedric.db.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,5 +43,9 @@ public class DbServiceImpl implements DbService{
 		return dDao.selectTableInfo(table);
 	}
 
+	@Override
+	public Map<String, Object> runSql(Map<String, String> pm) throws Exception {
+		return dDao.runSql(pm);
+	}
 
 }
