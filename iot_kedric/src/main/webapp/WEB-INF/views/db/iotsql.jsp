@@ -30,9 +30,11 @@ $(document).ready(function(){
 		if(keyCode==120){
 			cnt++;
 			console.log(cnt);
+			
 			var sql;
 			var sqls;
 			if(e.ctrlKey && keyCode==120 && e.shiftKey){
+				
 				sql = this.value;
 				var cursor = this.selectionStart;
 				var startSql = sql.substr(0,cursor);
@@ -46,6 +48,7 @@ $(document).ready(function(){
 				endSql = endSql.substr(0,endSap);
 				sql = startSql + endSql;
 			}else if(e.ctrlKey && keyCode==120){
+				
 				sql = this.value.substr(this.selectionStart, this.selectionEnd - this.selectionStart);
 				
 			}else if(keyCode==120){
@@ -54,6 +57,7 @@ $(document).ready(function(){
 				
 			}
 			if(sql){
+				kendoConsole.log(this.value);
 				sql = sql.trim();
 				sqls = sql.split(";");
 				if(sqls.length==1){
@@ -216,8 +220,8 @@ function changeMiddlePane(e){
         <kendo:splitter-pane id="middle-pane" collapsible="false" size="100px">
             <kendo:splitter-pane-content>
                 <div class="pane-content">
-	                <h3>Outer splitter / middle pane</h3>
-	                <p>Resizable only.</p>
+	                <div class="console">
+	                </div>
                 </div>
             </kendo:splitter-pane-content>
         </kendo:splitter-pane>
