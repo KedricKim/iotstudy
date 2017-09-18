@@ -14,7 +14,6 @@
 <script src="<c:url value="/resources/ui/common.js?version=${pVar}"/>"></script>
 <script src="<c:url value="/resources/ui/btsp3.7.7/js/bootstrap.min.js?version=${pVar}"/>"></script>
 <script src="<c:url value="/resources/ui/btsp3.7.7/js/bootstrap-table.js?version=${pVar}"/>"></script>
-<script src="<c:url value="/resources/ui/btsp3.7.7/js/bootstrap-table.js?version=${pVar}"/>"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
 <script src="<c:url value='/resources/js/kendo.all.min.js' />"></script>
 <script src="<c:url value='/resources/js/kendo.timezones.min.js' />"></script>
@@ -136,6 +135,5 @@ var AjaxUtil = function (url, params, type, dataType){
 		});
 	}
 }
-
 
 </script>

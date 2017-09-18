@@ -9,6 +9,7 @@
 		<kendo:tabStrip-item text="테이블정보" selected="true">
 			<kendo:tabStrip-item-content>
 				<div class="weather">
+				
 					<kendo:grid title="테이블정보" name="tableInfoGrid" sortable="true"
 					pageable="false" navigatable="true">
 						<kendo:grid-excel fileName="테이블정보.xlsx" allPages="true"
@@ -20,14 +21,20 @@
 							<kendo:grid-column title="널허용여부" field="isNullable">
 							</kendo:grid-column>
 						</kendo:grid-columns>
-						
 					</kendo:grid>
 				</div>
 			</kendo:tabStrip-item-content>
 		</kendo:tabStrip-item>
 		<kendo:tabStrip-item text="쿼리">
 			<kendo:tabStrip-item-content>
-					<textarea id="query" style="width:100%;height:100%"></textarea>
+				<div class="weather">
+					<kendo:toolBar name="queryToolbar">
+						<kendo:toolBar-items>
+							<kendo:toolBar-item type="button" text="실행" id="btnRun" click="toolbarEvent"/>
+						</kendo:toolBar-items>
+					</kendo:toolBar>
+					<textarea id="query"></textarea>
+				</div>
 			</kendo:tabStrip-item-content>
 		</kendo:tabStrip-item>
 	</kendo:tabStrip-items>
