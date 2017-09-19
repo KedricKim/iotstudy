@@ -23,4 +23,6 @@ public interface DbService {
 	
 	public Map<String,Object> runSql(Map<String, String> pm) throws Exception;
 
+	public Map<String, Object> runSqls(Map<String, List> pm) throws Exception;
+
 }

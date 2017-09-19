@@ -71,5 +71,15 @@ public class DbController {
 		}
 		return map;
 	}
+	@RequestMapping(value="/db/run/sqls",method=RequestMethod.POST)
+	public @ResponseBody ModelMap getSqlResults(@RequestBody Map<String,List> pm, ModelMap map){
+		try{
+			map.put("resultMap", ds.runSqls(pm));
+			map.put("key", "resultMap");
+		}catch(Exception e){
+			map.put("error", e.getMessage());
+		}
+		return map;
+	}
 	
 }

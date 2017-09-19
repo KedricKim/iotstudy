@@ -19,18 +19,11 @@ function onBound(){
 	}
 	
 }
-function test(a){
-	alert(a);
-}
 $(document).ready(function(){
-	
-	var cnt = 0;
+
 	$( "#query" ).keydown(function(e) {
 		var keyCode = e.keyCode || e.which;
 		if(keyCode==120){
-			cnt++;
-			console.log(cnt);
-			
 			var sql;
 			var sqls;
 			if(e.ctrlKey && keyCode==120 && e.shiftKey){
@@ -60,6 +53,7 @@ $(document).ready(function(){
 				kendoConsole.log(this.value);
 				sql = sql.trim();
 				sqls = sql.split(";");
+				sqls = sqls.filter(function(e){return e});
 				if(sqls.length==1){
 					var au = new AjaxUtil("db/run/sql");
 					var param = {};
@@ -68,20 +62,13 @@ $(document).ready(function(){
 					au.setCallbackSuccess(callbackSql);
 					au.send();
 					return;
-				}else if(sqls){
-					var sqlCount = sqls.length;
-					
-					for(var i=0; i<sqlCount; i++) {
-						var sql = sqls[i];
-						if(sql != '') {
-							var au = new AjaxUtil("db/run/sql");
-							var param = {};
-							param["sql"] = sqls[i];
-							au.param = JSON.stringify(param);
-							au.setCallbackSuccess(callbackSql);
-							au.send();	
-						}
-					}
+				}else if(sqls.length>1){
+					var au = new AjaxUtil("db/run/sqls");
+					var param={};
+					param["sql"] = sqls;
+					au.param = JSON.stringify(param);
+					au.setCallbackSuccess(callbackSql);
+					au.send();
 					return;
 				}
 			}
@@ -178,9 +165,6 @@ function toolbarEvent(e){
 	}
 }
 
-function changeMiddlePane(e){
-	console.log(e);
-}
 </script>
 <body>
 <c:import url="${menuUrl}"/> 
@@ -199,15 +183,15 @@ function changeMiddlePane(e){
 				        </kendo:splitter-pane>
 				        <kendo:splitter-pane id="center-pane" collapsible="false">
 				            <kendo:splitter-pane-content>
-								<kendo:splitter layoutChange="changeMiddlePane" name="vertical1" orientation="vertical" style="height: 100%; width: 100%;">
+								<kendo:splitter name="vertical1" orientation="vertical" style="height: 100%; width: 100%;">
 				   					<kendo:splitter-panes>
 		       							<kendo:splitter-pane id="top-pane" collapsible="false" >
-							                <div class="pane-content">
 						                		<c:import url="${tabJsp }"/>
-						                	</div>
 		       							</kendo:splitter-pane>
 		       							<kendo:splitter-pane id="middle-pane" collapsible="true" >
-						                	<div id="resultGrid"></div>
+		       								<div class="pane-content">
+						                		<div id="resultGrid"></div>
+						                	</div>
 		       							</kendo:splitter-pane>
 	       							</kendo:splitter-panes>
        							</kendo:splitter>
