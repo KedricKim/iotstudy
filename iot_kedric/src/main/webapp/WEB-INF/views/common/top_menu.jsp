@@ -9,18 +9,64 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="${rootPath}/main.jsp">HOME</a>
+          <a class="navbar-brand" id="main" style="cursor:pointer;"></a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="/board/board_select.jsp">게시판가기</a></li>
-            <li><a href="/user/user_info.jsp">유저정보가기</a></li>
-            <li><a href="/role/role_select.jsp">권한정보가기</a></li>
-            <li><a href="/user/logout">로그아웃</a></li>
+            <li><a id="board" style="cursor:pointer;">게시판가기</a></li>
+            <li><a id="userList" style="cursor:pointer;">유저정보가기</a></li>
+            <li><a id="querySQL" style="cursor:pointer;">QUERY</a></li>
+            <li><a id="logOut" style="cursor:pointer;">로그아웃</a></li>
           </ul>
           
         </div><!--/.nav-collapse -->
       </div>
     </nav>
+ <script>
+ <script>
+ var user = "${user}";
+ var userId = "${user.userId}";
+
+ $("#main").click(function(){
+ 	if(userId!=null&&userId){
+ 		pageMove("user/main");
+ 	}else{
+ 		pageMove("user/login");
+ 	}
+ })
+ $("#board").click(function(){
+ 	if(userId!=null&&userId){
+ 		pageMove("goods/goods_list")
+ 	}else{
+ 		pageMove("user/login");
+ 	}
+ })
+ $("#userList").click(function(){
+ 	if(userId!=null&&userId){
+ 		pageMove("grid/api");
+ 	}else{
+ 		pageMove("user/login");
+ 	}
+ })
+ $("#querySQL").click(function(){
+ 	if(userId!=null&&userId){
+ 		pageMove("db/iot_sql");
+ 	}else{
+ 		pageMove("user/login");
+ 	}
+ })
+
+ if(userId!=null&&userId){
+ 	$("#logOut").html("로그아웃");
+ }else{
+ 	$("#logOut").html("로그인");
+ }
+ $("#logOut").click(function(){
+ 	
+ 		pageMove("user/logout");
+ 	
+ 	
+ })
+ </script>
 <br><p><br><p>
 <br><p>

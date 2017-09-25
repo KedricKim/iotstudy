@@ -8,8 +8,7 @@
 	<kendo:tabStrip-items>
 		<kendo:tabStrip-item text="테이블정보" selected="true">
 			<kendo:tabStrip-item-content>
-				<div class="weather">
-				
+				<div class="tableInfo">
 					<kendo:grid title="테이블정보" name="tableInfoGrid" sortable="true"
 					pageable="false" navigatable="true">
 						<kendo:grid-excel fileName="테이블정보.xlsx" allPages="true"
@@ -27,15 +26,10 @@
 		</kendo:tabStrip-item>
 		<kendo:tabStrip-item text="쿼리">
 			<kendo:tabStrip-item-content>
-				<div class="weather">
-					<kendo:toolBar name="queryToolbar">
-						<kendo:toolBar-items>
-							<kendo:toolBar-item type="button" text="실행" id="btnRun" click="toolbarEvent"/>
-						</kendo:toolBar-items>
-					</kendo:toolBar>
-					<textarea id="query"></textarea>
+				<div class="sql">
+					<textarea id="query" style="width: 98%;height:80%;overflow: scroll;resize:none;"></textarea>
 				</div>
-			</kendo:tabStrip-item-content>
+			</kendo:tabStrip-item-content>		
 		</kendo:tabStrip-item>
 	</kendo:tabStrip-items>
 </kendo:tabStrip>

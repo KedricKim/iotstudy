@@ -50,7 +50,6 @@ $(document).ready(function(){
 				
 			}
 			if(sql){
-				kendoConsole.log(this.value);
 				sql = sql.trim();
 				sqls = sql.split(";");
 				sqls = sqls.filter(function(e){return e});
@@ -77,30 +76,49 @@ $(document).ready(function(){
 	});
 })
 function callbackSql(result){
-	// 에러일경우
-	if (result.error) {
+	var state=result.state;
+	if(result.error){
 		alert(result.error);
-	} else {
-		var key = result.key;
-		var obj = result[key];
-		var gridData = obj.list;
-		
-		try{
-			$('#resultGrid').kendoGrid('destroy').empty();
-		}catch(e){
-			
-		}
-		var gridParam = {
-		  		dataSource: {
-		    	      data: gridData,
-		    	      pageSize: 5
-		    	    },
-		    	    editable: false,
-		    	    sortable: true,
-		    	    pageable:true	    
-		  	}
-	  	var grid = $("#resultGrid").kendoGrid(gridParam);
+		$("#stateLog").append(result.error);
+		$("#stateLog").append("<br/>");
+		$("#stateLog").append(state);
+		$("#stateLog").append("<br/>");
+		return;
 	}
+	var key = result.key;
+	var obj = result[key];
+	var list = obj.list;
+	var sql = obj.sql;
+	var sqls = obj.sqls;
+	if(key){
+		if(sql){
+		$("#stateLog").append(sql);
+		$("#stateLog").append("<br/>");
+		}
+		if(sqls){
+			for(var i = 0; i<sqls.length; i++){
+				$("#stateLog").append(sqls[i]);
+				$("#stateLog").append("<br/>");
+			}
+		}
+		$("#stateLog").append(state);
+		$("#stateLog").append("<br/>");
+	}
+	
+	try{
+		$("#resultGrid").kendoGrid("destroy").empty();
+	}catch(e){
+		
+	}
+	var grid = $("#resultGrid").kendoGrid({
+  		dataSource: {
+  	      data: list,
+  	      pageSize: 5
+  	    },
+  	    editable: false,
+  	    sortable: true,
+  	    pageable:true	    
+	});
 }
 function treeSelect(){
 	window.selectedNode = treeview.select();
@@ -204,7 +222,7 @@ function toolbarEvent(e){
         <kendo:splitter-pane id="middle-pane" collapsible="false" size="100px">
             <kendo:splitter-pane-content>
                 <div class="pane-content">
-	                <div class="console">
+	                <div id="stateLog">
 	                </div>
                 </div>
             </kendo:splitter-pane-content>
@@ -255,7 +273,7 @@ function toolbarEvent(e){
 	}
 	#navbar ul li a:hover{
 		transition:0.3s;
-		color:#3f9d8f;		
+		color:#ff0000;		
 	}
 	 
 	.navbar-brand {
